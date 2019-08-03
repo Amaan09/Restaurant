@@ -2,8 +2,8 @@ const   express     = require("express"),
         app         = express(),
         jwt         = require("jsonwebtoken"),
         mongoose    = require("mongoose"),
-        // verifyToken = require("./auth/verifyToken"),
-        // key         = require("./key/key"),
+        verifyToken = require("./auth/verifyToken"),
+        key         = require("./key/key"),
         bodyParser  = require("body-parser");
 
 require('dotenv').config()

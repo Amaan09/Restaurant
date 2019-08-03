@@ -2,11 +2,13 @@ const   express     = require("express"),
         app         = express(),
         db          = require("./db"),
         jwt         = require("jsonwebtoken"),
+        mongoose    = require("mongoose"),
         // verifyToken = require("./auth/verifyToken"),
         // key         = require("./key/key"),
         bodyParser  = require("body-parser");
 
 require('dotenv').config()
+
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());

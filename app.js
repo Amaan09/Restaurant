@@ -2,8 +2,8 @@ const   express     = require("express"),
         app         = express(),
         db          = require("./db"),
         jwt         = require("jsonwebtoken"),
-        verifyToken = require("./auth/verifyToken"),
-        key         = require("./key/key"),
+        // verifyToken = require("./auth/verifyToken"),
+        // key         = require("./key/key"),
         bodyParser  = require("body-parser");
 
 require('dotenv').config()
@@ -31,7 +31,9 @@ app.use(function (req, res, next) {
     next();
 });
 
-// const adminRoutes = require("./admin/adminController");
+const adminRoutes = require("./admin/adminController");
+
+app.use("/admin",adminRoutes);
 
 app.get("/",(req,res)=>{
     res.send("Hello world");
@@ -39,4 +41,4 @@ app.get("/",(req,res)=>{
 
 app.listen(3000,(req,res)=>{
     console.log("Server Started!!!");
-})
+});

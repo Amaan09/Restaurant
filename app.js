@@ -34,9 +34,11 @@ app.use(function (req, res, next) {
     next();
 });
 
-const adminRoutes = require("./admin/adminController");
+const   adminRoutes = require("./admin/adminController"),
+        authRoutes = require("./auth/authController");
 
 app.use("/admin",adminRoutes);
+app.use("/login",authRoutes);
 
 app.get("/",(req,res)=>{
     res.send("Hello world");

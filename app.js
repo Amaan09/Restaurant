@@ -1,6 +1,5 @@
 const   express     = require("express"),
         app         = express(),
-        db          = require("./db"),
         jwt         = require("jsonwebtoken"),
         mongoose    = require("mongoose"),
         // verifyToken = require("./auth/verifyToken"),
@@ -8,6 +7,8 @@ const   express     = require("express"),
         bodyParser  = require("body-parser");
 
 require('dotenv').config()
+
+mongoose.connect(process.env.DATABASEURL,{useNewUrlParser: true });
 
 
 app.use(bodyParser.urlencoded({ extended: false }));

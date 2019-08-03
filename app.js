@@ -6,7 +6,7 @@ const   express     = require("express"),
         key         = require("./key/key"),
         bodyParser  = require("body-parser");
 
-require('dotenv').config()
+require('dotenv').config();
 
 mongoose.connect(process.env.DATABASEURL,{useNewUrlParser: true });
 

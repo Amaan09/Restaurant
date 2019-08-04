@@ -37,12 +37,14 @@ app.use(function (req, res, next) {
 const   adminRoutes     = require("./admin/adminController"),
         authRoutes      = require("./auth/authController"),
         restRoutes      = require("./restaurant/restaurantController"),
-        locationRoutes  = require("./location/locationController");      
+        locationRoutes  = require("./location/locationController"),
+        waiterRoutes    = require("./waiter/waiterController");      
 
 app.use("/admin",adminRoutes);
 app.use("/login",authRoutes);
 app.use("/restaurants",verifyToken,restRoutes);
 app.use("/locations",verifyToken,locationRoutes);
+app.use("/waiters",verifyToken,waiterRoutes)
 
 app.get("/",(req,res)=>{
     res.send("Hello world");

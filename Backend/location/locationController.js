@@ -67,7 +67,6 @@ router.put("/:locationId",(req, res, next) => {
         .exec()
         .then(result => {
             msg: "Updated successfully"
-            res.status(200).send(result);
         })
         .catch(err => {
             console.log(err);

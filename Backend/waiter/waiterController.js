@@ -1,16 +1,16 @@
-const   express       = require("express"),
-        router          = express.Router(),
-        mongoose        = require("mongoose"),
-        Restaurant      = require("./restaurant"),
-        bcrypt          = require('bcrypt'),
-        saltRounds      = 10;
+const express = require("express"),
+    router = express.Router(),
+    mongoose = require("mongoose"),
+    Waiter = require("./waiter"),
+    bcrypt = require('bcrypt'),
+    saltRounds = 10;
 
-router.post("/:adminId",(req, res, next) => {
+router.post("/:restId", (req, res, next) => {
     var password = req.body.password;
     var hash = bcrypt.hashSync(password, saltRounds);
-    const restaurant = new Restaurant({
+    const waiter    = new Waiter({
         _id         : new mongoose.Types.ObjectId(),
-        admin       : req.params.admin,
+        restaurant  : req.params.restId,
         location    : req.body.location,
         name        : req.body.name,
         password    : hash,
@@ -18,11 +18,11 @@ router.post("/:adminId",(req, res, next) => {
         mobile      : req.body.mobile,
         address     : req.body.address
     });
-    restaurant
+    waiter
         .save()
         .then(result => {
             res.status(200).send({
-                message: "Restaurant details stored"
+                message: "Waiter details stored"
             });
         })
         .catch(err => {
@@ -31,7 +31,7 @@ router.post("/:adminId",(req, res, next) => {
         });
 });
 
-router.get("/",(req, res, next) => {
+router.get("/", (req, res, next) => {
     var page = parseInt(req.query.page);
     var size = req.query.size;
     if (size === undefined)
@@ -47,7 +47,7 @@ router.get("/",(req, res, next) => {
     }
     var skip = size * (page - 1);
     var limit = size;
-    Restaurant.find({}, {}, { skip: skip, limit: limit }).sort({ id: -1 })
+    Waiter.find({}, {}, { skip: skip, limit: limit }).sort({ id: -1 })
         .exec()
         .then(docs => {
             res.status(200).send(docs);
@@ -60,9 +60,9 @@ router.get("/",(req, res, next) => {
         });
 });
 
-router.get("/:restId",(req, res, next) => {
-    const id = req.params.restId;
-    Restaurant.findById(id)
+router.get("/:waiterId", (req, res, next) => {
+    const id = req.params.waiterId;
+    Waiter.findById(id)
         .exec()
         .then(doc => {
             if (doc) {
@@ -78,15 +78,15 @@ router.get("/:restId",(req, res, next) => {
 });
 
 
-router.put("/:restId",(req, res, next) => {
+router.put("/:waiterId", (req, res, next) => {
 
-    const id = req.params.restId;
+    const id = req.params.waiterId;
 
     if (req.body.hasOwnProperty('password')) {
         req.body.password = bcrypt.hashSync(req.body.password, 10);
     }
 
-    Restaurant.findByIdAndUpdate(id, req.body)
+    Waiter.findByIdAndUpdate(id, req.body)
         .exec()
         .then(result => {
             msg: "Updated successfully"
@@ -100,7 +100,7 @@ router.put("/:restId",(req, res, next) => {
 });
 
 router.get("/pages/count", function (req, res) {
-    Restaurant.countDocuments().exec((err, result) => {
+    Waiter.countDocuments().exec((err, result) => {
         if (err) {
             res.status(404).send({ msg: err });
         } else {

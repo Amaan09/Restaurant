@@ -32,7 +32,7 @@ router.post("/",(req,res,next)=>{
 });
 
 // getting all admin details
-router.get("/", verifyToken, (req, res, next) => {
+router.get("/", /*verifyToken,*/ (req, res, next) => {
     var page = parseInt(req.query.page);
     var size = req.query.size;
     if (size === undefined)
@@ -62,7 +62,7 @@ router.get("/", verifyToken, (req, res, next) => {
 });
 
 //getting details by admin Id
-router.get("/:adminId", verifyToken,(req, res, next) => {
+router.get("/:adminId", /*verifyToken,*/(req, res, next) => {
     const id = req.params.adminId;
     Admin.findById(id)
         .exec()
@@ -81,7 +81,7 @@ router.get("/:adminId", verifyToken,(req, res, next) => {
 
 
 // updating admin details
-router.put("/:adminId",  verifyToken,(req, res, next) => {
+router.put("/:adminId",  /*verifyToken,*/(req, res, next) => {
 
     const id = req.params.adminId;
 

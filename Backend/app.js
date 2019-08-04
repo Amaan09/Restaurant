@@ -35,10 +35,12 @@ app.use(function (req, res, next) {
 });
 
 const   adminRoutes = require("./admin/adminController"),
-        authRoutes = require("./auth/authController");
+        authRoutes  = require("./auth/authController"),
+        restRoutes  = require("./restaurant/restaurantController");    
 
 app.use("/admin",adminRoutes);
 app.use("/login",authRoutes);
+app.use("/restaurant",restRoutes);
 
 app.get("/",(req,res)=>{
     res.send("Hello world");

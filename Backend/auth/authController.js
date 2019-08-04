@@ -23,12 +23,12 @@ router.post("/admin", function (req, res) {
             } else {
                 var result = bcrypt.compareSync(req.body.password, user.password);
                 if (result === true) {
-                    var token = jwt.sign({ userId: user._id, name: user.name }, key.tokenKey, { expiresIn: '12h', issuer: 'Wishto' });
+                    var token = jwt.sign({ userId: user._id, name: user.name }, key.tokenKey, { expiresIn: '12h', issuer: 'Amaan' });
                     var decoded = jwt.decode(token);
                     res.status(200).send({ token: token, user: user });
                 }
                 else {
-                    res.status(200).send({ msg: "Username or Password Didn't Match" });
+                    res.status(200).send({ msg: "Email or Password Didn't Match" });
                 }
             }
         }

@@ -1,28 +1,26 @@
-const   express     = require("express"),
-        router      = express.Router(),
-        mongoose    = require("mongoose"),
-        Admin       = require("./admin"),
-        bcrypt      = require('bcrypt'),
-        saltRounds  = 10,
-        verifyToken = require("../auth/verifyToken");
-
-// create an admin 
-router.post("/",(req,res,next)=>{
+const   express       = require("express"),
+        router          = express.Router(),
+        mongoose        = require("mongoose"),
+        Restaurant      = require("./restaurant"),
+        bcrypt          = require('bcrypt'),
+        saltRounds      = 10;
+        
+router.post("/:adminId",(req, res, next) => {
     var password = req.body.password;
     var hash = bcrypt.hashSync(password, saltRounds);
-    const admin = new Admin({
-        _id             : new mongoose.Types.ObjectId(),
-        name            : req.body.name,
-        username        : req.body.username,
-        password        : hash,
-        email           : req.body.email,
-        mobile          : req.body.mobile
+    const restaurant = new Restaurant({
+        _id         : new mongoose.Types.ObjectId(),
+        adminId     : req.params.adminId,
+        name        : req.body.name,
+        password    : hash,
+        email       : req.body.email,
+        mobile      : req.body.mobile
     });
-    admin
+    restaurant
         .save()
         .then(result => {
             res.status(200).send({
-                message: "Admin details stored"
+                message: "Restaurant details stored"
             });
         })
         .catch(err => {
@@ -31,8 +29,7 @@ router.post("/",(req,res,next)=>{
         });
 });
 
-// getting all admin details
-router.get("/", verifyToken, (req, res, next) => {
+router.get("/",(req, res, next) => {
     var page = parseInt(req.query.page);
     var size = req.query.size;
     if (size === undefined)
@@ -48,7 +45,7 @@ router.get("/", verifyToken, (req, res, next) => {
     }
     var skip = size * (page - 1);
     var limit = size;
-    Admin.find({}, {}, { skip: skip, limit: limit }).sort({ id: -1 })
+    Restaurant.find({}, {}, { skip: skip, limit: limit }).sort({ id: -1 })
         .exec()
         .then(docs => {
             res.status(200).send(docs);
@@ -61,10 +58,9 @@ router.get("/", verifyToken, (req, res, next) => {
         });
 });
 
-//getting details by admin Id
-router.get("/:adminId", verifyToken,(req, res, next) => {
-    const id = req.params.adminId;
-    Admin.findById(id)
+router.get("/:restId",(req, res, next) => {
+    const id = req.params.restId;
+    Restaurant.findById(id)
         .exec()
         .then(doc => {
             if (doc) {
@@ -80,21 +76,19 @@ router.get("/:adminId", verifyToken,(req, res, next) => {
 });
 
 
-// updating admin details
-router.put("/:adminId",  verifyToken,(req, res, next) => {
+router.put("/:restId",(req, res, next) => {
 
-    const id = req.params.adminId;
+    const id = req.params.restId;
 
     if (req.body.hasOwnProperty('password')) {
         req.body.password = bcrypt.hashSync(req.body.password, 10);
     }
 
-    Admin.findByIdAndUpdate(id, req.body)
+    Restaurant.findByIdAndUpdate(id, req.body)
         .exec()
         .then(result => {
             msg: "Updated successfully"
-            res.status(200).send(result);
-        }) 
+        })
         .catch(err => {
             console.log(err);
             res.status(500).send({

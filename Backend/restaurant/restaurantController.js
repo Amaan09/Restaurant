@@ -4,17 +4,20 @@ const   express       = require("express"),
         Restaurant      = require("./restaurant"),
         bcrypt          = require('bcrypt'),
         saltRounds      = 10;
-        
+
 router.post("/:adminId",(req, res, next) => {
     var password = req.body.password;
     var hash = bcrypt.hashSync(password, saltRounds);
     const restaurant = new Restaurant({
         _id         : new mongoose.Types.ObjectId(),
-        adminId     : req.params.adminId,
+        admin       : req.params.admin,
+        location    : req.body.location,
         name        : req.body.name,
         password    : hash,
         email       : req.body.email,
-        mobile      : req.body.mobile
+        mobile      : req.body.mobile,
+        kyc         : req.body.kyc,
+        address     : req.body.address
     });
     restaurant
         .save()
@@ -95,6 +98,20 @@ router.put("/:restId",(req, res, next) => {
                 msg: err
             });
         });
+});
+
+router.get("/pages/count", function (req, res) {
+    Restaurant.countDocuments().exec((err, result) => {
+        if (err) {
+            res.status(404).send({ msg: err });
+        } else {
+            var page = Math.ceil(result / 10);
+            res.status(200).send({
+                pages: page,
+                count: result
+            });
+        }
+    });
 });
 
 module.exports = router;

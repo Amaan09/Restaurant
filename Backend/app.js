@@ -34,13 +34,15 @@ app.use(function (req, res, next) {
     next();
 });
 
-const   adminRoutes = require("./admin/adminController"),
-        authRoutes  = require("./auth/authController"),
-        restRoutes  = require("./restaurant/restaurantController");    
+const   adminRoutes     = require("./admin/adminController"),
+        authRoutes      = require("./auth/authController"),
+        restRoutes      = require("./restaurant/restaurantController"),
+        locationRoutes  = require("./location/locationController");      
 
 app.use("/admin",adminRoutes);
 app.use("/login",authRoutes);
-app.use("/restaurant",restRoutes);
+app.use("/restaurants",verifyToken,restRoutes);
+app.use("/locations",verifyToken,locationRoutes);
 
 app.get("/",(req,res)=>{
     res.send("Hello world");

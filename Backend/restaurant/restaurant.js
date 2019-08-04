@@ -2,19 +2,19 @@ const mongoose = require("mongoose");
 
 const restaurantSchema = mongoose.Schema({
     _id         : mongoose.Schema.Types.ObjectId,
-    adminId     : {
+    admin       : {
       type      : mongoose.Schema.Types.ObjectId,
-      ref       : 'Admin' 
+      ref       : 'Admin',
+      required  : true 
     },
-    // locationId  : {
-    //   type      : monogoose.Schema.Types.ObjectId,
-    //   ref       : 'Location'
-    // },
+    location    : {
+      type      : monogoose.Schema.Types.ObjectId,
+      ref       : 'Location'
+    },
     name        : String,
     email       : String,
     password    : String,
     mobile      : Number,
-    kyc         : String,
     address     : String,
     createdTime : { type: Date, default: Date.now }
 });

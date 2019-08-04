@@ -38,17 +38,19 @@ const   adminRoutes     = require("./admin/adminController"),
         authRoutes      = require("./auth/authController"),
         restRoutes      = require("./restaurant/restaurantController"),
         locationRoutes  = require("./location/locationController"),
-        waiterRoutes    = require("./waiter/waiterController");      
+        waiterRoutes    = require("./waiter/waiterController"),
+        menuRoutes      = require("./menu/menuController"),
+        orderRoutes     = require("./orders/orderController"),
+        tableRoutes     = require("./tables/tablesController");      
 
 app.use("/admin",adminRoutes);
 app.use("/login",authRoutes);
 app.use("/restaurants",verifyToken,restRoutes);
 app.use("/locations",verifyToken,locationRoutes);
 app.use("/waiters",verifyToken,waiterRoutes)
-
-app.get("/",(req,res)=>{
-    res.send("Hello world");
-});
+app.use("/menu", verifyToken, menuRoutes);
+app.use("/orders", verifyToken, orderRoutes);
+app.use("/tables", verifyToken, tableRoutes);
 
 app.listen(3000,(req,res)=>{
     console.log("Server Started!!!");

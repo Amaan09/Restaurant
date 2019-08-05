@@ -1,10 +1,10 @@
 const   express     = require("express"),
         router      = express.Router(),
         mongoose    = require("mongoose"),
-        Table       = require("./table");
+        Table       = require("./tables");
 
 
-// Get details of all locations with pagination to get limited records or all records
+// Get details of all tables with pagination to get limited records or all records
 router.get("/", (req, res, next) => {
     Table.find()
         .exec()

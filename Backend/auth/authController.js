@@ -6,6 +6,7 @@ const express = require('express'),
     jwt = require('jsonwebtoken'),
     bcrypt = require('bcrypt'),
     saltRounds = 10,
+    Waiter = require("../waiter/waiter");
     key = require("../key/key");
 //Auth Routes
 router.post("/admin", function (req, res) {

@@ -119,7 +119,7 @@ router.put("/:restId",(req, res, next) => {
     Restaurant.findByIdAndUpdate(id, req.body)
         .exec()
         .then(result => {
-            msg: "Updated successfully"
+            res.status(200).send({ msg: "Updated successfully" });
         })
         .catch(err => {
             console.log(err);

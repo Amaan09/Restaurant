@@ -7,10 +7,6 @@ const waiterSchema = mongoose.Schema({
         ref         : 'Restaurant',
         required    : true
     },
-    location        : {
-        type        : mongoose.Schema.Types.ObjectId,
-        ref         : 'Location'
-    },
     name            : String,
     email           : {
         type        : String,

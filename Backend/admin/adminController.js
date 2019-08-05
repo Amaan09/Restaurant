@@ -92,8 +92,8 @@ router.put("/:adminId",  verifyToken,(req, res, next) => {
     Admin.findByIdAndUpdate(id, req.body)
         .exec()
         .then(result => {
-            msg: "Updated successfully"
-            res.status(200).send(result);
+            res.status(200).send({ msg: "Updated successfully"});
+            
         }) 
         .catch(err => {
             console.log(err);

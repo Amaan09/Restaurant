@@ -6,7 +6,11 @@ const menuSchema = mongoose.Schema({
     type        : String,
     category    : String,
     price       : Number,
-    image       : String
+    image       : String,
+    available   : {
+        type    : Boolean,
+        default : true
+    }
 });
 
 module.exports = mongoose.model('Menu', menuSchema);

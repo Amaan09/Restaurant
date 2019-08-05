@@ -1,9 +1,9 @@
-const express = require("express"),
-    router = express.Router(),
-    mongoose = require("mongoose"),
-    Waiter = require("./waiter"),
-    bcrypt = require('bcrypt'),
-    saltRounds = 10;
+const   express     = require("express"),
+        router      = express.Router(),
+        mongoose    = require("mongoose"),
+        Waiter      = require("./waiter"),
+        bcrypt      = require('bcrypt'),
+        saltRounds  = 10;
 
 router.post("/:restId", (req, res, next) => {
     var password = req.body.password;

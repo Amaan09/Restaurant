@@ -31,6 +31,35 @@ router.post("/:restId", (req, res, next) => {
         });
 });
 
+router.get("/restaurant/:restId", (req, res, next) => {
+    var page = parseInt(req.query.page);
+    var size = req.query.size;
+    if (size === undefined)
+        size = 10;
+    else
+        size = parseInt(req.query.size);
+    if (page < 0 || page === 0) {
+        response = {
+            "error": true,
+            "message": "invalid page number, should start with 1"
+        };
+        res.send(response);
+    }
+    var skip = size * (page - 1);
+    var limit = size;
+    Waiter.find({"restaurant":req.params.restId}, {}, { skip: skip, limit: limit }).sort({ id: -1 })
+        .exec()
+        .then(docs => {
+            res.status(200).send(docs);
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).send({
+                error: err
+            });
+        });
+});
+
 router.get("/", (req, res, next) => {
     var page = parseInt(req.query.page);
     var size = req.query.size;

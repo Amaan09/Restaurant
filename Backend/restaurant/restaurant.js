@@ -9,7 +9,8 @@ const restaurantSchema = mongoose.Schema({
     },
     location    : {
       type      : monogoose.Schema.Types.ObjectId,
-      ref       : 'Location'
+      ref       : 'Location',
+      required  : true
     },
     name        : String,
     email       : String,

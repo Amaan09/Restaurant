@@ -18,7 +18,7 @@ const waiterSchema = mongoose.Schema({
     },
     password        : String,
     mobile          : {
-        type        : String,
+        type        : Number,
         unique      : true
     },
     address         : String,

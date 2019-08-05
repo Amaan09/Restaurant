@@ -13,9 +13,15 @@ const restaurantSchema = mongoose.Schema({
       required  : true
     },
     name        : String,
-    email       : String,
+    email       : {
+    type        : String,
+    unique      : true
+    },
     password    : String,
-    mobile      : Number,
+    mobile      : {
+      type      : Number,
+      unique    : true
+    },
     address     : String,
     createdTime : { type: Date, default: Date.now }
 });

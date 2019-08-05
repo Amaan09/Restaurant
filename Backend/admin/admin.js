@@ -9,7 +9,7 @@ const adminSchema = mongoose.Schema({
         unique  : true
     },
     mobile      : {
-        type    : String,
+        type    : Number,
         unique  : true
     },
     createdTime: { type: Date, default: Date.now }

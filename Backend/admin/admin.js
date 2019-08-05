@@ -4,8 +4,14 @@ const adminSchema = mongoose.Schema({
     _id         : mongoose.Schema.Types.ObjectId,
     name        : String,
     password    : String,
-    email       : String,
-    mobile      : Number,
+    email       : {
+        type    : String,
+        unique  : true
+    },
+    mobile      : {
+        type    : String,
+        unique  : true
+    },
     createdTime: { type: Date, default: Date.now }
 });
 

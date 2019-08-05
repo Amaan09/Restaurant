@@ -60,6 +60,8 @@ router.get("/", (req, res, next) => {
         });
 });
 
+
+
 router.get("/:waiterId", (req, res, next) => {
     const id = req.params.waiterId;
     Waiter.findById(id)

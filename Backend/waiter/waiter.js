@@ -12,9 +12,15 @@ const waiterSchema = mongoose.Schema({
         ref         : 'Location'
     },
     name            : String,
-    email           : String,
+    email           : {
+        type        : String,
+        unique      : true
+    },
     password        : String,
-    mobile          : Number,
+    mobile          : {
+        type        : String,
+        unique      : true
+    },
     address         : String,
     createdTime: { type: Date, default: Date.now }
 });

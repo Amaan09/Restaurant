@@ -1,4 +1,4 @@
-const   express       = require("express"),
+const   express         = require("express"),
         router          = express.Router(),
         mongoose        = require("mongoose"),
         Restaurant      = require("./restaurant"),
@@ -10,8 +10,8 @@ router.post("/:adminId",(req, res, next) => {
     var hash = bcrypt.hashSync(password, saltRounds);
     const restaurant = new Restaurant({
         _id         : new mongoose.Types.ObjectId(),
-        admin       : req.params.admin,
-        location    : req.body.location,
+        admin       : req.params.adminId,
+        location    : req.body.locationId,
         name        : req.body.name,
         password    : hash,
         email       : req.body.email,
@@ -22,7 +22,7 @@ router.post("/:adminId",(req, res, next) => {
         .save()
         .then(result => {
             res.status(200).send({
-                message: "Restaurant details stored"
+                message: "Restaurant details stored by admin"
             });
         })
         .catch(err => {

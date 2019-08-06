@@ -37,7 +37,7 @@ router.get("/", (req, res, next) => {
 router.post("/:restId", (req, res, next) => {
     const menu = new Menu({
         _id         : new mongoose.Types.ObjectId(),
-        restaurant  : req.body.restId,
+        restaurant  : req.params.restId,
         name        : req.body.name,
         type        : req.body.type,
         category    : req.body.category,
@@ -57,7 +57,7 @@ router.post("/:restId", (req, res, next) => {
         });
 });
 
-router.get("restaurant/:restId",(req,res,next)=>{
+router.get("/restaurant/:restId",(req,res,next)=>{
     var page = parseInt(req.query.page);
     var size = req.query.size;
     if (size === undefined)

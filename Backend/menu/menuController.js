@@ -4,7 +4,7 @@ const   express     = require("express"),
         Menu        = require("./menu");
 
 
-// Get details of all locations with pagination to get limited records or all records
+// Get details of all restaurant menus with pagination to get limited records or all records
 router.get("/", (req, res, next) => {
     var page = parseInt(req.query.page);
     var size = req.query.size;
@@ -34,10 +34,10 @@ router.get("/", (req, res, next) => {
         });
 });
 
-// admin creates the location which required to be filled by the user, employer or the consultant
-router.post("/", (req, res, next) => {
+router.post("/:restId", (req, res, next) => {
     const menu = new Menu({
-        _id: new mongoose.Types.ObjectId(),
+        _id         : new mongoose.Types.ObjectId(),
+        restaurant  : req.body.restId,
         name        : req.body.name,
         type        : req.body.type,
         category    : req.body.category,
@@ -57,7 +57,36 @@ router.post("/", (req, res, next) => {
         });
 });
 
-//  getting location details by a specific location id
+router.get("restaurant/:restId",(req,res,next)=>{
+    var page = parseInt(req.query.page);
+    var size = req.query.size;
+    if (size === undefined)
+        size = 10;
+    else
+        size = parseInt(req.query.size);
+    if (page < 0 || page === 0) {
+        response = {
+            "error": true,
+            "message": "invalid page number, should start with 1"
+        };
+        res.send(response);
+    }
+    var skip = size * (page - 1);
+    var limit = size;
+    Menu.find({"restaurant":req.params.restId}, {}, { skip: skip, limit: limit }).sort({ id: -1 })
+        .exec()
+        .then(docs => {
+            res.status(200).send(docs);
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).send({
+                error: err
+            });
+        });
+});
+
+//  getting menu details by a specific menu id
 router.get("/:menuId", (req, res, next) => {
     const id = req.params.menuId;
     Menu.findById(id).
@@ -76,7 +105,7 @@ router.get("/:menuId", (req, res, next) => {
         });
 });
 
-// updating location details
+// updating menu details
 router.put("/:menuId", (req, res, next) => {
 
     const id = req.params.menuId;

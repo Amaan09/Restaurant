@@ -1,25 +1,29 @@
 const   express     = require("express"),
         router      = express.Router(),
         mongoose    = require("mongoose"),
-        Table       = require("./tables");
+        Table       = require("./tables"),
+        Restaurant  = require("../restaurant/restaurant");
         
 // admin creates the Table which required to be filled by the user, employer or the consultant
-router.post("/", (req, res, next) => {
-    const table = new Table({
-        _id     : new mongoose.Types.ObjectId(),
-        tableNo : req.body.tableNo
-    });
-    table
-        .save()
-        .then(result => {
-            res.status(200).send({
-                message: "New Table saved"
-            });
-        })
-        .catch(err => {
-            console.log(err);
-            res.status(500).send({ error: err });
-        });
+router.post("/:restId", (req, res, next) => {
+    Table.insertMany(req.body.tables,(err,newTable)=>{
+        if(err){
+            res.status(404).send({error:err});
+        } else {
+            Restaurant.findById(req.params.restId,(err,result)=>{
+                if(err){
+                    console.log(err);
+                } else {
+                    var id = result._id;
+                    newTable.forEach(element => {
+                        element.restaurant = id;
+                        element.save();
+                    });
+                    res.status(200).send(newTable);
+                }
+            })
+        }
+    })
 });
 
 router.get("/restaurant/:restId", (req, res, next) => {

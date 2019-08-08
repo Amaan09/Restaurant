@@ -5,7 +5,11 @@ const tableSchema = mongoose.Schema({
         type    : mongoose.Schema.Types.ObjectId,
         ref     : 'Restaurant'
     },
-    tableNo     : Number
+    tableNo     : Number,
+    available   : {
+        type    : Boolean,
+        default : true
+    }
 });
 
 module.exports = mongoose.model('Table', tableSchema);

@@ -5,9 +5,52 @@ const   express     = require("express"),
         moment      = require("moment");
 
 
-// Get details of all locations with pagination to get limited records or all records
-router.get("/", (req, res, next) => {
-    Order.find()
+router.get("/restaurant/:restId", (req, res, next) => {
+    var page = parseInt(req.query.page);
+    var size = req.query.size;
+    if (size === undefined)
+        size = 10;
+    else
+        size = parseInt(req.query.size);
+    if (page < 0 || page === 0) {
+        response = {
+            "error": true,
+            "message": "invalid page number, should start with 1"
+        };
+        res.send(response);
+    }
+    var skip = size * (page - 1);
+    var limit = size;
+    Order.find({ "restaurant": req.params.restId}, {}, { skip: skip, limit: limit }).sort({ id: -1 })
+        .exec()
+        .then(docs => {
+            res.status(200).send(docs);
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).send({
+                error: err
+            });
+        });
+});
+
+router.get("/tables/:tableId", (req, res, next) => {
+    var page = parseInt(req.query.page);
+    var size = req.query.size;
+    if (size === undefined)
+        size = 10;
+    else
+        size = parseInt(req.query.size);
+    if (page < 0 || page === 0) {
+        response = {
+            "error": true,
+            "message": "invalid page number, should start with 1"
+        };
+        res.send(response);
+    }
+    var skip = size * (page - 1);
+    var limit = size;
+    Order.find({ "table": req.params.tableId }, {}, { skip: skip, limit: limit }).sort({ id: -1 })
         .exec()
         .then(docs => {
             res.status(200).send(docs);
@@ -21,12 +64,13 @@ router.get("/", (req, res, next) => {
 });
 
 // admin creates the Table which required to be filled by the user, employer or the consultant
-router.post("/", (req, res, next) => {
+router.post("/:restId", (req, res, next) => {
     var random = moment().format("YYYYMMDDHHmmSS");
     var id = random + "ORD";
     const order = new Order({
         _id         : new mongoose.Types.ObjectId(),
         id          : id,
+        restaurant  : req.params.restId,
         table       : req.body.table,
         order       : req.body.order
     });
@@ -34,7 +78,7 @@ router.post("/", (req, res, next) => {
         .save()
         .then(result => {
             res.status(200).send({
-                message: result
+                message: "order added!"
             });
         })
         .catch(err => {
@@ -43,13 +87,31 @@ router.post("/", (req, res, next) => {
         });
 });
 
+// adding more orders 
+router.post("/add/:orderId",(req,res,next)=>{
+    var result = req.body.order;
+    Order.findById(req.params.orderId)
+    .exec()
+    .then(foundOrder => {
+        if(foundOrder) {
+            foundOrder.order.push(result);
+            foundOrder.save();
+            res.status(200).send({message: "New Order added"})
+        } else {
+            res.status(404).send({ message: "No valid entry found for provided Id" });
+        }
+    })
+    .catch(err => {
+        res.status(500).send({ error: err });
+    });
+});
+
 //  getting Table details by a specific Table id
 router.get("/:orderId", (req, res, next) => {
     const id = req.params.orderId;
-    Order.findById(id).
-        exec()
+    Order.findById(id)
+        .exec()
         .then(doc => {
-            console.log(doc);
             if (doc) {
                 res.status(200).send(doc);
             } else {
@@ -57,7 +119,6 @@ router.get("/:orderId", (req, res, next) => {
             }
         })
         .catch(err => {
-            console.log(err);
             res.status(500).send({ error: err });
         });
 });

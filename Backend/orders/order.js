@@ -18,6 +18,10 @@ const orderSchema = mongoose.Schema({
         },
         quantity    : Number
     }],
+    final       : {
+        type    : Boolean,
+        default : false
+    },
     createdTime     : { type: Date, default: Date.now }
 });
 

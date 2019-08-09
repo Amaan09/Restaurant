@@ -1,7 +1,8 @@
 const   express     = require("express"),
         router      = express.Router(),
         mongoose    = require("mongoose"),
-        Order       = require("./order");
+        Order       = require("./order"),
+        moment      = require("moment");
 
 
 // Get details of all locations with pagination to get limited records or all records
@@ -21,16 +22,19 @@ router.get("/", (req, res, next) => {
 
 // admin creates the Table which required to be filled by the user, employer or the consultant
 router.post("/", (req, res, next) => {
+    var random = moment().format("YYYYMMDDHHmmSS");
+    var id = random + "ORD";
     const order = new Order({
         _id         : new mongoose.Types.ObjectId(),
-        menu        : req.body.menu,
-        qunatity    : req.body.qunatity
+        id          : id,
+        table       : req.body.table,
+        order       : req.body.order
     });
     order
         .save()
         .then(result => {
             res.status(200).send({
-                message: "New Order saved"
+                message: result
             });
         })
         .catch(err => {

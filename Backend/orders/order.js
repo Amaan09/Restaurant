@@ -13,7 +13,8 @@ const orderSchema = mongoose.Schema({
             ref     : 'Menu'
         },
         quantity    : Number
-    }]
+    }],
+    createdTime     : { type: Date, default: Date.now }
 });
 
 module.exports = mongoose.model('Order', orderSchema);

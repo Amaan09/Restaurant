@@ -10,6 +10,7 @@ const menuSchema = mongoose.Schema({
     type        : String,
     category    : String,
     price       : Number,
+    quantity    : Number,
     image       : String,
     available   : {
         type    : Boolean,

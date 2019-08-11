@@ -12,10 +12,8 @@ const orderSchema = mongoose.Schema({
         ref     : 'Table'
     },
     order       : [{
-        menu        : {
-            type    : mongoose.Schema.Types.ObjectId,
-            ref     : 'Menu'
-        },
+        name        : String,
+        price       : Number,
         quantity    : Number
     }],
     final       : {

@@ -68,11 +68,11 @@ router.post("/:restId", (req, res, next) => {
     var random = moment().format("YYYYMMDDHHmmSS");
     var id = random + "ORD";
     const order = new Order({
-        _id         : new mongoose.Types.ObjectId(),
-        id          : id,
-        restaurant  : req.params.restId,
-        table       : req.body.table,
-        order       : req.body.order
+        _id                 : new mongoose.Types.ObjectId(),
+        id                  : id,
+        restaurant          : req.params.restId,
+        table               : req.body.table,
+        order               : req.body.order
     });
     order
         .save()
@@ -96,7 +96,7 @@ router.post("/add/:orderId",(req,res,next)=>{
         if(foundOrder) {
             foundOrder.order.push(result);
             foundOrder.save();
-            res.status(200).send({message: "New Order added"})
+            res.status(200).send({message: "New Order pushed to existing table"})
         } else {
             res.status(404).send({ message: "No valid entry found for provided Id" });
         }
@@ -130,7 +130,24 @@ router.put("/:orderId", (req, res, next) => {
     Order.findByIdAndUpdate(id, req.body)
         .exec()
         .then(result => {
-            msg: "Updated successfully"
+            res.status(200).send({msg: "Updated details"})
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).send({
+                msg: err
+            });
+        });
+});
+
+//button to mark the final order 
+router.post("/final/:orderId", (req, res, next) => {
+
+    const id = req.params.orderId;
+    Order.findByIdAndUpdate(id, req.body.final)
+        .exec()
+        .then(result => {
+            res.status(200).send({ msg: "Updated details" })
         })
         .catch(err => {
             console.log(err);

@@ -14,13 +14,18 @@ const orderSchema = mongoose.Schema({
     order       : [{
         name        : String,
         price       : Number,
-        quantity    : Number
+        quantity    : Number,
+        totalPrice  : Number
     }],
     final       : {
         type    : Boolean,
         default : false
     },
-    createdTime     : { type: Date, default: Date.now }
+    grandTotal  : {
+        type    : Number,
+        default : 0
+    },
+    createdTime : { type: Date, default: Date.now }
 });
 
 module.exports = mongoose.model('Order', orderSchema);

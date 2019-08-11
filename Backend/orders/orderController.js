@@ -90,13 +90,11 @@ router.post("/:restId", (req, res, next) => {
 // adding more orders 
 router.post("/add/:orderId",(req,res,next)=>{
     var result = req.body.order;
-    Order.findById(req.params.orderId)
+    Order.findByIdAndUpdate(req.params.orderId,{$push:{order:{$each:req.body.order}}})
     .exec()
     .then(foundOrder => {
         if(foundOrder) {
-            foundOrder.order.push(result);
-            foundOrder.save();
-            res.status(200).send({message: "New Order pushed to existing table"})
+            res.status(200).send({message: "New Orders pushed to existing orderId"})
         } else {
             res.status(404).send({ message: "No valid entry found for provided Id" });
         }
@@ -141,20 +139,54 @@ router.put("/:orderId", (req, res, next) => {
 });
 
 //button to mark the final order 
-router.post("/final/:orderId", (req, res, next) => {
+router.post("/final/:orderId", async(req, res, next) => {
+    
+    try {
+        const id = req.params.orderId;
+        let order = await Order.findByIdAndUpdate(id, { final: "true" }).exec();
+        Order.aggregate([
+            {
+                "$project": {
+                    "number": 1,
+                    "total": {
+                        "$sum": {
+                            "$map": {
+                                "input": "$order",
+                                "as": "order",
+                                "in": {
+                                    "$multiply": [
+                                        { "$ifNull": ["$$order.quantity", 0] },
+                                        { "$ifNull": ["$$order.price", 0] }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "$group": {
+                    "_id": "$id",
+                    "total": { "$sum": "$total" }
+                }
+            }
+        ]).exec((err, result) => {
+            if (err) {
+                console.log(err);
+            } else {
+                result.forEach(element=>{
+                    order.grandTotal = element.total;
+                    order.save();
+                });
+                
 
-    const id = req.params.orderId;
-    Order.findByIdAndUpdate(id, req.body.final)
-        .exec()
-        .then(result => {
-            res.status(200).send({ msg: "Updated details" })
-        })
-        .catch(err => {
-            console.log(err);
-            res.status(500).send({
-                msg: err
-            });
+            }
         });
+        res.status(200).send({ msg: "Bill is printed at the counter please collect" });
+    } catch (error) {
+        res.status(500).send({ err: error.toString(), msg: err });
+    }
+    
 });
 
 router.get("/pages/count", function (req, res) {

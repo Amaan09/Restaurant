@@ -189,6 +189,30 @@ router.post("/final/:orderId", async(req, res, next) => {
     
 });
 
+router.get("/analytics/date",function(req,res){
+    Order.aggregate([
+        {
+            $group: {
+                _id: {
+
+                    year: { $year: "$createdTime" },
+
+                    month: { $month: "$createdTime" },
+
+                    day: { $dayOfMonth: "$createdTime" }
+
+                }, count: { $sum: "$grandTotal" }
+            }
+        }
+    ]).exec((err, result) => {
+        if (err) {
+            res.status(404).send({ msg: err });
+        } else {
+            res.status(200).send(result);
+        }
+    });
+});
+
 router.get("/pages/count", function (req, res) {
     Order.countDocuments().exec((err, result) => {
         if (err) {
